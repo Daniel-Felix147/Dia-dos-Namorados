@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>💖 Larissa — Feliz Dia dos Namorados 💖</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Tela de login -->
+    <div id="view-login" class="view view-ativa">
+        <div class="painel login-painel">
+            <h1>💖 Larissa, uma surpresa para você 💖</h1>
+            <p>Entre para abrir — foi feito com carinho</p>
+            <form id="form-login" autocomplete="on">
+                <label for="login-usuario">Usuário</label>
+                <input id="login-usuario" name="username" type="text" placeholder="visitante ou admin" required>
+
+                <label for="login-senha">Senha</label>
+                <input id="login-senha" name="password" type="password" placeholder="Visitante pode deixar vazio">
+
+                <p class="dica">
+                    <strong>Visitante:</strong> usuário <code>visitante</code> — senha vazia ou <code>visitante</code>.<br>
+                    <strong>Admin:</strong> <code>admin</code> / <code>1234</code>
+                </p>
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Visitante já assistiu -->
+    <div id="view-bloqueado" class="view">
+        <div class="painel">
+            <h1>💔 Acesso já utilizado</h1>
+            <p class="bloqueado-msg">
+                Larissa, você já abriu esta surpresa uma vez.<br>
+                O acesso de visitante não pode ser repetido.
+            </p>
+            <p>Se precisar testar de novo, peça para resetar o acesso (admin).</p>
+            <button type="button" id="btn-voltar-login-bloqueado">Voltar ao login</button>
+        </div>
+    </div>
+
+    <!-- Tela do vídeo -->
+    <div id="view-video" class="view">
+        <div class="painel painel-video">
+            <h1>💖 Larissa — casada comigo e dona do meu coração 💖</h1>
+
+            <!-- Texto, assinatura e vídeo sobem juntos na mesma rolagem -->
+            <div id="texto-scroll-viewport" class="texto-scroll-viewport" aria-live="polite">
+                <div id="texto-scroll-inner" class="texto-scroll-inner">
+                    <div id="texto-pre-video" class="texto-pre-video"></div>
+                    <p id="frase-assinatura" class="frase-assinatura">Para sempre seu,<br>com todo o meu amor.</p>
+                    <div id="video-wrap" class="video-wrap">
+                        <!-- Adicione: <source src="seu-video.mp4" type="video/mp4"> -->
+                        <video id="video-final" muted playsinline autoplay loop controls
+                            aria-label="Vídeo especial para Larissa">
+                        </video>
+                        <p class="video-placeholder">Coloque seu vídeo em <code>seu-video.mp4</code> e adicione a tag &lt;source&gt; dentro do &lt;video&gt;.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin: reset do visitante -->
+    <div id="admin-bar" aria-label="Ferramentas do administrador">
+        <span>Modo administrador</span>
+        <button type="button" id="btn-reset-visitante">Resetar acesso do visitante</button>
+        <button type="button" class="btn-sair" id="btn-sair-admin">Sair</button>
+    </div>
+
+    <audio id="musica" loop>
+        <source src="https://www.myinstants.com/media/sounds/perfect-ed-sheeran.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="app.js"></script>
+</body>
+</html>

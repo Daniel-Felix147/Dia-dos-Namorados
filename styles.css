@@ -1,0 +1,303 @@
+/* ===== Base ===== */
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    background: linear-gradient(to bottom, #ff4d6d, #ff758f);
+    overflow-x: hidden;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+}
+
+.view {
+    display: none;
+}
+
+.view.view-ativa {
+    display: block;
+}
+
+/* ===== Painel ===== */
+.painel {
+    margin: auto;
+    margin-top: 80px;
+    background-color: white;
+    width: 400px;
+    max-width: 92vw;
+    border-radius: 20px;
+    text-align: center;
+    padding: 30px 20px 24px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+}
+
+.painel h1 {
+    font-size: 1.35rem;
+    margin-top: 0;
+}
+
+.painel-video {
+    margin-top: 40px;
+    margin-bottom: 80px;
+}
+
+button {
+    height: 45px;
+    min-width: 80px;
+    padding: 0 12px;
+    background-color: #ff4d6d;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* ===== Login ===== */
+.login-painel {
+    margin-top: 120px;
+}
+
+.login-painel label {
+    display: block;
+    text-align: left;
+    margin: 12px 0 4px;
+    font-size: 14px;
+    color: #333;
+}
+
+.login-painel input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.login-painel .dica {
+    font-size: 12px;
+    color: #666;
+    margin-top: 8px;
+    text-align: left;
+}
+
+.login-painel button[type="submit"] {
+    margin-top: 18px;
+    width: 100%;
+}
+
+/* ===== Bloqueado ===== */
+.bloqueado-msg {
+    font-size: 18px;
+    color: #c62828;
+    margin: 16px 0;
+    line-height: 1.4;
+}
+
+/* ===== Texto sobe automaticamente (antes do vídeo) ===== */
+.texto-scroll-viewport {
+    position: relative;
+    height: min(52vh, 380px);
+    height: min(52dvh, 380px);
+    margin: 16px 0 8px;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #fff 0%, #fce4ec 8%, #fce4ec 92%, #fff 100%);
+    border-radius: 12px;
+    border: 1px solid #f8bbd0;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6%, #000 94%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+
+.texto-scroll-inner {
+    will-change: transform;
+    padding: 12px 14px 24px;
+}
+
+.texto-pre-video {
+    font-size: 16px;
+    line-height: 1.65;
+    color: #880e4f;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+}
+
+.texto-scroll-inner .frase-assinatura {
+    font-size: 16px;
+    font-style: italic;
+    color: #ad1457;
+    margin: 22px 0 16px;
+    padding: 0 4px;
+    text-align: right;
+    line-height: 1.45;
+}
+
+.texto-scroll-inner .video-wrap {
+    margin-top: 0;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fce4ec;
+}
+
+.texto-scroll-inner .video-wrap video {
+    width: 100%;
+    max-height: 280px;
+    display: block;
+    background: #000;
+}
+
+.video-placeholder {
+    padding: 16px 12px;
+    font-size: 13px;
+    color: #880e4f;
+    margin: 0;
+}
+
+/* ===== Admin ===== */
+#admin-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 10px 16px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    z-index: 100;
+    font-size: 14px;
+}
+
+#admin-bar.visivel {
+    display: flex;
+}
+
+#admin-bar button {
+    background: #43a047;
+}
+
+#admin-bar .btn-sair {
+    background: #757575;
+}
+
+/* ===== Celular ===== */
+@media (max-width: 600px) {
+    .painel {
+        width: calc(100% - 12px);
+        max-width: none;
+        margin-top: max(10px, env(safe-area-inset-top));
+        margin-bottom: calc(72px + env(safe-area-inset-bottom));
+        padding: 18px 14px 20px;
+        border-radius: 16px;
+    }
+
+    .painel h1 {
+        font-size: clamp(1.05rem, 4.5vw, 1.25rem);
+        line-height: 1.35;
+        padding: 0 2px;
+    }
+
+    .painel-video {
+        margin-top: 8px;
+        margin-bottom: calc(76px + env(safe-area-inset-bottom));
+    }
+
+    .login-painel {
+        margin-top: max(20px, env(safe-area-inset-top));
+    }
+
+    .login-painel input,
+    .login-painel button[type="submit"],
+    button {
+        font-size: 16px;
+        min-height: 48px;
+    }
+
+    .login-painel .dica {
+        font-size: 11px;
+        line-height: 1.45;
+    }
+
+    .bloqueado-msg {
+        font-size: 16px;
+    }
+
+    .texto-scroll-viewport {
+        height: min(62dvh, 480px);
+        margin: 12px 0 6px;
+    }
+
+    .texto-scroll-inner {
+        padding: 10px 12px 28px;
+    }
+
+    .texto-pre-video {
+        font-size: 15px;
+        line-height: 1.75;
+        hyphens: auto;
+        -webkit-hyphens: auto;
+    }
+
+    .texto-scroll-inner .frase-assinatura {
+        font-size: 15px;
+        margin: 18px 0 14px;
+    }
+
+    .texto-scroll-inner .video-wrap video {
+        max-height: min(38dvh, 280px);
+        object-fit: contain;
+    }
+
+    .video-placeholder {
+        font-size: 12px;
+        padding: 12px 10px;
+    }
+
+    #admin-bar {
+        padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+        gap: 8px;
+        font-size: 12px;
+    }
+
+    #admin-bar button {
+        min-height: 44px;
+        font-size: 13px;
+        padding: 0 10px;
+    }
+}
+
+@media (max-width: 380px) {
+    .painel {
+        width: calc(100% - 8px);
+        padding: 16px 12px 18px;
+    }
+
+    .texto-scroll-viewport {
+        height: min(58dvh, 440px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .texto-scroll-viewport {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        mask-image: none;
+        -webkit-mask-image: none;
+    }
+
+    .texto-scroll-inner {
+        transform: none !important;
+    }
+
+}
