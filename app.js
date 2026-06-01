@@ -36,11 +36,6 @@
     var DURACAO_MINIMA_DESKTOP_MS = 20000;
     var DURACAO_MINIMA_MOBILE_MS = 28000;
 
-    /** Música de fundo: trecho contínuo (~60 s) */
-    var MUSICA_DURACAO_SEG = 60;
-    var MUSICA_INICIO_SEG = 0;
-    var musicaTimerParar = null;
-    var musicaInicioWallMs = 0;
 
     function isMobile() {
         return window.matchMedia('(max-width: 600px)').matches;
@@ -117,77 +112,27 @@
 
     function pararMusicaFundo() {
         if (!audioMusica) return;
-        if (musicaTimerParar) {
-            clearTimeout(musicaTimerParar);
-            musicaTimerParar = null;
-        }
         audioMusica.onended = null;
         audioMusica.loop = false;
         audioMusica.pause();
     }
 
-    function musicaAtingiuLimite() {
-        if (!audioMusica) return true;
-        var decorridoSeg = (Date.now() - musicaInicioWallMs) / 1000;
-        if (decorridoSeg >= MUSICA_DURACAO_SEG) return true;
-        var fimTrecho = MUSICA_INICIO_SEG + MUSICA_DURACAO_SEG;
-        return audioMusica.currentTime >= fimTrecho;
-    }
-
-    function agendarParadaMusica() {
-        if (musicaTimerParar) clearTimeout(musicaTimerParar);
-        var restanteMs = Math.max(0, MUSICA_DURACAO_SEG * 1000 - (Date.now() - musicaInicioWallMs));
-        musicaTimerParar = setTimeout(function () {
-            musicaTimerParar = null;
-            pararMusicaFundo();
-        }, restanteMs);
-    }
-
-    function continuarMusicaAteLimite() {
-        if (!audioMusica || musicaAtingiuLimite()) {
-            pararMusicaFundo();
-            return;
-        }
-
-        var duracaoArquivo = audioMusica.duration;
-        var trechoDisponivel = isFinite(duracaoArquivo)
-            ? duracaoArquivo - MUSICA_INICIO_SEG
-            : 0;
-
-        audioMusica.loop = trechoDisponivel > 0 && trechoDisponivel < MUSICA_DURACAO_SEG;
-
-        if (audioMusica.currentTime < MUSICA_INICIO_SEG) {
-            audioMusica.currentTime = MUSICA_INICIO_SEG;
-        }
-
-        audioMusica.onended = function () {
-            if (musicaAtingiuLimite()) {
-                pararMusicaFundo();
-                return;
-            }
-            audioMusica.currentTime = MUSICA_INICIO_SEG;
-            audioMusica.play().catch(function () { /* ignorar */ });
-        };
-
-        agendarParadaMusica();
-        audioMusica.play().catch(function () { /* autoplay bloqueado */ });
-    }
-
+    /** Toca musica.mp3 inteira (do início ao fim do arquivo). */
     function tentarTocarMusica() {
         if (!audioMusica || !audioMusica.play) return;
 
         pararMusicaFundo();
-        musicaInicioWallMs = Date.now();
-        audioMusica.currentTime = MUSICA_INICIO_SEG;
+        audioMusica.currentTime = 0;
 
         function iniciar() {
-            continuarMusicaAteLimite();
+            audioMusica.loop = false;
+            audioMusica.play().catch(function () { /* autoplay bloqueado */ });
         }
 
         if (audioMusica.readyState >= 1) {
             iniciar();
         } else {
-            audioMusica.addEventListener('loadedmetadata', iniciar, { once: true });
+            audioMusica.addEventListener('canplay', iniciar, { once: true });
         }
     }
 
