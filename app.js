@@ -1,0 +1,300 @@
+/**
+ * Surpresa para Larissa — login, vídeo e música de fundo.
+ */
+
+(function () {
+    'use strict';
+
+    var USUARIO_ADMIN = 'admin';
+    var SENHA_ADMIN = '1234';
+    var USUARIO_VISITANTE = 'visitante';
+    var SENHA_VISITANTE_OPCIONAL = 'visitante';
+
+    var LS_VISITANTE_CONCLUIU = 'fujao_visitante_concluiu';
+    var SS_SESSAO = 'fujao_sessao';
+
+    var viewLogin = document.getElementById('view-login');
+    var viewBloqueado = document.getElementById('view-bloqueado');
+    var viewVideo = document.getElementById('view-video');
+    var adminBar = document.getElementById('admin-bar');
+
+    var formLogin = document.getElementById('form-login');
+    var btnResetVisitante = document.getElementById('btn-reset-visitante');
+    var btnSairAdmin = document.getElementById('btn-sair-admin');
+    var btnVoltarLoginBloqueado = document.getElementById('btn-voltar-login-bloqueado');
+
+    var videoFinal = document.getElementById('video-final');
+    var audioMusica = document.getElementById('musica');
+    var elTextoPreVideo = document.getElementById('texto-pre-video');
+    var textoScrollViewport = document.getElementById('texto-scroll-viewport');
+    var textoScrollInner = document.getElementById('texto-scroll-inner');
+    var videoWrap = document.getElementById('video-wrap');
+
+    /** Velocidade da rolagem (px/s) — menor = mais lento */
+    var VELOCIDADE_TEXTO_DESKTOP = 18;
+    var VELOCIDADE_TEXTO_MOBILE = 12;
+    var DURACAO_MINIMA_DESKTOP_MS = 20000;
+    var DURACAO_MINIMA_MOBILE_MS = 28000;
+
+    function isMobile() {
+        return window.matchMedia('(max-width: 600px)').matches;
+    }
+
+    function obterVelocidadeTextoPxS() {
+        return isMobile() ? VELOCIDADE_TEXTO_MOBILE : VELOCIDADE_TEXTO_DESKTOP;
+    }
+
+    function obterDuracaoMinimaMs() {
+        return isMobile() ? DURACAO_MINIMA_MOBILE_MS : DURACAO_MINIMA_DESKTOP_MS;
+    }
+
+    function prefereMovimentoReduzido() {
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    var animacaoTextoAtual = null;
+
+    /** Texto exibido antes do vídeo (deixe vazio para usar frases aleatórias de TEXTOS_PRE_VIDEO) */
+    var TEXTO_PRE_VIDEO_FIXO =
+        'O amor se revela nos pequenos gestos, nos olhares que dizem tudo sem precisar de palavras e nos sentimentos que crescem a cada dia. Neste Dia dos Namorados, quero celebrar tudo o que você representa para mim: a felicidade dos nossos momentos juntos, a força da nossa conexão e a certeza de que encontrei alguém verdadeiramente especial.\n\n' +
+        'Meu amor, hoje quero dizer o quanto você merece as mais belas palavras que existem. Talvez eu não demonstre todos os dias, da forma que você merece, o tamanho da minha admiração e do meu amor por você. Mas saiba que você é a mulher da minha vida, aquela que trouxe mais cor aos meus dias, renovou minha fé no amor e me mostrou que compartilhar a vida ao lado da pessoa certa torna tudo mais bonito.\n\n' +
+        'Neste Dia dos Namorados, quero agradecer por cada sorriso, cada carinho e por ser essa mulher incrível que faz meu coração se apaixonar por você todos os dias. Eu te amo e me sinto privilegiado por ter você ao meu lado. ❤️';
+
+    var TEXTOS_PRE_VIDEO = [];
+
+    // ========== Sessão e localStorage ==========
+
+    function getSessao() {
+        return sessionStorage.getItem(SS_SESSAO);
+    }
+
+    function setSessao(papel) {
+        sessionStorage.setItem(SS_SESSAO, papel);
+    }
+
+    function limparSessao() {
+        sessionStorage.removeItem(SS_SESSAO);
+    }
+
+    function visitanteJaConcluiu() {
+        return localStorage.getItem(LS_VISITANTE_CONCLUIU) === '1';
+    }
+
+    function marcarVisitanteConcluiu() {
+        if (getSessao() === 'visitante') {
+            localStorage.setItem(LS_VISITANTE_CONCLUIU, '1');
+        }
+    }
+
+    function resetarAcessoVisitante() {
+        localStorage.removeItem(LS_VISITANTE_CONCLUIU);
+    }
+
+    // ========== Navegação ==========
+
+    function mostrarView(viewEl) {
+        [viewLogin, viewBloqueado, viewVideo].forEach(function (v) {
+            v.classList.remove('view-ativa');
+        });
+        viewEl.classList.add('view-ativa');
+    }
+
+    function atualizarBarraAdmin() {
+        if (getSessao() === 'admin') {
+            adminBar.classList.add('visivel');
+        } else {
+            adminBar.classList.remove('visivel');
+        }
+    }
+
+    // ========== Áudio e vídeo ==========
+
+    function tentarTocarMusica() {
+        if (audioMusica && audioMusica.play) {
+            audioMusica.play().catch(function () { /* autoplay bloqueado */ });
+        }
+    }
+
+    function configurarMusicaNaPrimeiraInteracaoLogin() {
+        function estaNaTelaLogin() {
+            return viewLogin && viewLogin.classList.contains('view-ativa');
+        }
+
+        function aoPrimeiroGesto() {
+            if (!estaNaTelaLogin() || !audioMusica || !audioMusica.play) return;
+            var promessa = audioMusica.play();
+            if (promessa && typeof promessa.then === 'function') {
+                promessa
+                    .then(function () {
+                        viewLogin.removeEventListener('pointerdown', aoPrimeiroGesto);
+                        viewLogin.removeEventListener('keydown', aoPrimeiroGesto);
+                        viewLogin.removeEventListener('touchstart', aoPrimeiroGesto);
+                    })
+                    .catch(function () { /* tenta no próximo gesto */ });
+            }
+        }
+
+        viewLogin.addEventListener('pointerdown', aoPrimeiroGesto, { passive: true });
+        viewLogin.addEventListener('keydown', aoPrimeiroGesto);
+        viewLogin.addEventListener('touchstart', aoPrimeiroGesto, { passive: true });
+    }
+
+    function tentarTocarVideo() {
+        if (!videoFinal) return;
+        videoFinal.muted = true;
+        videoFinal.play().catch(function () { /* autoplay bloqueado */ });
+    }
+
+    function definirTextoPreVideo() {
+        if (!elTextoPreVideo) return;
+        var texto;
+        if (TEXTO_PRE_VIDEO_FIXO && TEXTO_PRE_VIDEO_FIXO.trim()) {
+            texto = TEXTO_PRE_VIDEO_FIXO.trim();
+        } else if (TEXTOS_PRE_VIDEO.length) {
+            var i = Math.floor(Math.random() * TEXTOS_PRE_VIDEO.length);
+            texto = TEXTOS_PRE_VIDEO[i];
+        } else {
+            texto = '';
+        }
+        elTextoPreVideo.textContent = texto;
+        elTextoPreVideo.style.whiteSpace = 'pre-line';
+    }
+
+    function pararAnimacaoTexto() {
+        if (animacaoTextoAtual) {
+            animacaoTextoAtual.cancel();
+            animacaoTextoAtual = null;
+        }
+        if (textoScrollInner) {
+            textoScrollInner.style.transform = '';
+        }
+    }
+
+    function pausarVideo() {
+        if (videoFinal) {
+            videoFinal.pause();
+            videoFinal.currentTime = 0;
+        }
+    }
+
+    function iniciarRolagemTexto() {
+        if (!textoScrollViewport || !textoScrollInner) {
+            tentarTocarVideo();
+            return;
+        }
+
+        pararAnimacaoTexto();
+        pausarVideo();
+
+        var alturaViewport = textoScrollViewport.clientHeight;
+        var alturaConteudo = textoScrollInner.offsetHeight;
+        var inicioY = alturaViewport;
+        var fimY = -alturaConteudo;
+        var distancia = inicioY - fimY;
+        var velocidade = obterVelocidadeTextoPxS();
+        var duracaoMs = Math.max(obterDuracaoMinimaMs(), (distancia / velocidade) * 1000);
+
+        function aoTerminarRolagem() {
+            tentarTocarVideo();
+        }
+
+        if (prefereMovimentoReduzido()) {
+            textoScrollInner.style.transform = 'translateY(0)';
+            setTimeout(aoTerminarRolagem, 4000);
+            return;
+        }
+
+        textoScrollInner.style.transform = 'translateY(' + inicioY + 'px)';
+
+        animacaoTextoAtual = textoScrollInner.animate(
+            [
+                { transform: 'translateY(' + inicioY + 'px)' },
+                { transform: 'translateY(' + fimY + 'px)' }
+            ],
+            { duration: duracaoMs, easing: 'linear', fill: 'forwards' }
+        );
+
+        animacaoTextoAtual.finished
+            .then(function () {
+                animacaoTextoAtual = null;
+                aoTerminarRolagem();
+            })
+            .catch(function () { /* animação cancelada */ });
+    }
+
+    function abrirTelaVideo() {
+        definirTextoPreVideo();
+        mostrarView(viewVideo);
+        marcarVisitanteConcluiu();
+        tentarTocarMusica();
+
+        requestAnimationFrame(function () {
+            requestAnimationFrame(iniciarRolagemTexto);
+        });
+    }
+
+    // ========== Login ==========
+
+    function validarLogin(usuario, senha) {
+        var u = (usuario || '').trim().toLowerCase();
+        var s = (senha || '').trim();
+        if (u === USUARIO_ADMIN && s === SENHA_ADMIN) return 'admin';
+        if (u === USUARIO_VISITANTE) {
+            if (s === '' || s === SENHA_VISITANTE_OPCIONAL) return 'visitante';
+        }
+        return null;
+    }
+
+    function entrar(papel) {
+        setSessao(papel);
+        atualizarBarraAdmin();
+        abrirTelaVideo();
+    }
+
+    formLogin.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var usuario = document.getElementById('login-usuario').value;
+        var senha = document.getElementById('login-senha').value;
+        var papel = validarLogin(usuario, senha);
+
+        if (!papel) {
+            alert('Usuário ou senha inválidos.\n\nVisitante: "visitante" (senha vazia ou "visitante").\nAdmin: admin / 1234');
+            return;
+        }
+
+        if (papel === 'visitante' && visitanteJaConcluiu()) {
+            mostrarView(viewBloqueado);
+            return;
+        }
+
+        entrar(papel);
+    });
+
+    // ========== Admin ==========
+
+    btnResetVisitante.addEventListener('click', function () {
+        resetarAcessoVisitante();
+        alert('Acesso do visitante resetado. Larissa poderá abrir a surpresa novamente.');
+    });
+
+    btnSairAdmin.addEventListener('click', function () {
+        limparSessao();
+        atualizarBarraAdmin();
+        pararAnimacaoTexto();
+        pausarVideo();
+        mostrarView(viewLogin);
+        document.getElementById('login-usuario').value = '';
+        document.getElementById('login-senha').value = '';
+    });
+
+    if (btnVoltarLoginBloqueado) {
+        btnVoltarLoginBloqueado.addEventListener('click', function () {
+            mostrarView(viewLogin);
+        });
+    }
+
+    // ========== Início ==========
+
+    mostrarView(viewLogin);
+    configurarMusicaNaPrimeiraInteracaoLogin();
+})();
