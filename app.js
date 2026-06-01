@@ -28,7 +28,8 @@
     var elTextoPreVideo = document.getElementById('texto-pre-video');
     var textoScrollViewport = document.getElementById('texto-scroll-viewport');
     var textoScrollInner = document.getElementById('texto-scroll-inner');
-    var videoWrap = document.getElementById('video-wrap');
+    var painelVideo = document.querySelector('.painel-video');
+    var videoCentro = document.getElementById('video-centro');
 
     /** Velocidade da rolagem (px/s) — menor = mais lento */
     var VELOCIDADE_TEXTO_DESKTOP = 18;
@@ -175,6 +176,27 @@
         elTextoPreVideo.style.whiteSpace = 'pre-line';
     }
 
+    function esconderVideoCentro() {
+        if (videoCentro) {
+            videoCentro.classList.remove('visivel');
+            videoCentro.setAttribute('aria-hidden', 'true');
+        }
+        if (painelVideo) {
+            painelVideo.classList.remove('mostrar-video');
+        }
+    }
+
+    function mostrarVideoCentro() {
+        if (painelVideo) {
+            painelVideo.classList.add('mostrar-video');
+        }
+        if (videoCentro) {
+            videoCentro.classList.add('visivel');
+            videoCentro.setAttribute('aria-hidden', 'false');
+        }
+        tentarTocarVideo();
+    }
+
     function pararAnimacaoTexto() {
         if (animacaoTextoAtual) {
             animacaoTextoAtual.cancel();
@@ -183,6 +205,7 @@
         if (textoScrollInner) {
             textoScrollInner.style.transform = '';
         }
+        esconderVideoCentro();
     }
 
     function pausarVideo() {
@@ -210,7 +233,7 @@
         var duracaoMs = Math.max(obterDuracaoMinimaMs(), (distancia / velocidade) * 1000);
 
         function aoTerminarRolagem() {
-            tentarTocarVideo();
+            mostrarVideoCentro();
         }
 
         if (prefereMovimentoReduzido()) {
@@ -239,6 +262,7 @@
 
     function abrirTelaVideo() {
         definirTextoPreVideo();
+        esconderVideoCentro();
         mostrarView(viewVideo);
         marcarVisitanteConcluiu();
         tentarTocarMusica();
