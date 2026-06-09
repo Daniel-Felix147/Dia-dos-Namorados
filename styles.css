@@ -101,6 +101,55 @@ button {
     line-height: 1.4;
 }
 
+.bloqueado-dica {
+    font-size: 13px;
+    color: #666;
+    margin: 16px 0 12px;
+}
+
+.convite-local {
+    margin: 24px 0 8px;
+    padding: 20px 16px;
+    background: linear-gradient(135deg, #fff5f8 0%, #fce4ec 100%);
+    border: 1px solid #f8bbd0;
+    border-radius: 14px;
+}
+
+.convite-titulo {
+    font-size: 20px;
+    color: #880e4f;
+    margin: 0 0 12px;
+    font-weight: 600;
+}
+
+.convite-texto {
+    font-size: 16px;
+    color: #4a148c;
+    margin: 0 0 18px;
+    line-height: 1.5;
+}
+
+.btn-maps {
+    display: inline-block;
+    min-height: 48px;
+    padding: 12px 20px;
+    background-color: #ff4d6d;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    line-height: 1.25;
+    box-shadow: 0 4px 14px rgba(255, 77, 109, 0.35);
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-maps:hover,
+.btn-maps:focus-visible {
+    background-color: #e84363;
+    transform: translateY(-1px);
+}
+
 /* ===== Texto sobe automaticamente (antes do vídeo) ===== */
 .texto-scroll-viewport {
     position: relative;
@@ -282,6 +331,20 @@ button {
 
     .bloqueado-msg {
         font-size: 16px;
+    }
+
+    .convite-titulo {
+        font-size: 18px;
+    }
+
+    .convite-texto {
+        font-size: 15px;
+    }
+
+    .btn-maps {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
     }
 
     .texto-scroll-viewport {

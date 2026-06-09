@@ -10,6 +10,9 @@
     var USUARIO_VISITANTE = 'visitante';
     var SENHA_VISITANTE_OPCIONAL = 'visitante';
 
+    /** Cole aqui o link do Google Maps do encontro (deixe vazio para ocultar o botão). */
+    var LINK_GOOGLE_MAPS_CONVITE = '';
+
     var LS_VISITANTE_CONCLUIU = 'fujao_visitante_concluiu';
     var SS_SESSAO = 'fujao_sessao';
 
@@ -351,9 +354,24 @@
         });
     }
 
+    function configurarConviteMaps() {
+        var elLink = document.getElementById('link-maps-convite');
+        if (!elLink) return;
+
+        var link = (LINK_GOOGLE_MAPS_CONVITE || '').trim();
+        if (!link) {
+            elLink.hidden = true;
+            return;
+        }
+
+        elLink.href = link;
+        elLink.hidden = false;
+    }
+
     // ========== Início ==========
 
     mostrarView(viewLogin);
     configurarMusicaNaPrimeiraInteracaoLogin();
     configurarBloqueioAposVideo();
+    configurarConviteMaps();
 })();
