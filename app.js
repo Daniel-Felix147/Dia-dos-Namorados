@@ -7,8 +7,8 @@
 
     var USUARIO_ADMIN = 'hesoyam';
     var SENHA_ADMIN = 'yecgaa';
-    var USUARIO_VISITANTE = 'visitante';
-    var SENHA_VISITANTE_OPCIONAL = 'visitante';
+    var USUARIO_VISITANTE = 'larissa';
+    var SENHA_VISITANTE = '11980757087';
 
     /** Cole aqui o link do Google Maps do encontro (deixe vazio para ocultar o botão). */
     var LINK_GOOGLE_MAPS_CONVITE = '';
@@ -299,9 +299,7 @@
         var u = (usuario || '').trim().toLowerCase();
         var s = (senha || '').trim();
         if (u === USUARIO_ADMIN && s === SENHA_ADMIN) return 'admin';
-        if (u === USUARIO_VISITANTE) {
-            if (s === '' || s === SENHA_VISITANTE_OPCIONAL) return 'visitante';
-        }
+        if (u === USUARIO_VISITANTE && s === SENHA_VISITANTE) return 'visitante';
         return null;
     }
 
