@@ -88,6 +88,25 @@
         }
     }
 
+    function bloquearVisitanteAposVideo() {
+        marcarVisitanteConcluiu();
+        limparSessao();
+        atualizarBarraAdmin();
+        pararAnimacaoTexto();
+        pararMusicaFundo();
+        pausarVideo();
+        mostrarView(viewBloqueado);
+    }
+
+    function configurarBloqueioAposVideo() {
+        if (!videoFinal) return;
+        videoFinal.addEventListener('ended', function () {
+            if (getSessao() === 'visitante') {
+                bloquearVisitanteAposVideo();
+            }
+        });
+    }
+
     function resetarAcessoVisitante() {
         localStorage.removeItem(LS_VISITANTE_CONCLUIU);
     }
@@ -264,7 +283,6 @@
         definirTextoPreVideo();
         esconderVideoCentro();
         mostrarView(viewVideo);
-        marcarVisitanteConcluiu();
         tentarTocarMusica();
 
         requestAnimationFrame(function () {
@@ -337,4 +355,5 @@
 
     mostrarView(viewLogin);
     configurarMusicaNaPrimeiraInteracaoLogin();
+    configurarBloqueioAposVideo();
 })();
