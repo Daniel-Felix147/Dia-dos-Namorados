@@ -318,7 +318,7 @@
         var papel = validarLogin(usuario, senha);
 
         if (!papel) {
-            alert('Usuário ou senha inválidos.\n\nVisitante: "visitante" (senha vazia ou "visitante").\nAdmin: hesoyam / yecgaa');
+            alert('Usuário ou senha inválidos.');
             return;
         }
 
