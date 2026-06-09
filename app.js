@@ -5,8 +5,8 @@
 (function () {
     'use strict';
 
-    var USUARIO_ADMIN = 'admin';
-    var SENHA_ADMIN = '1234';
+    var USUARIO_ADMIN = 'hesoyam';
+    var SENHA_ADMIN = 'yecgaa';
     var USUARIO_VISITANTE = 'visitante';
     var SENHA_VISITANTE_OPCIONAL = 'visitante';
 
@@ -318,7 +318,7 @@
         var papel = validarLogin(usuario, senha);
 
         if (!papel) {
-            alert('Usuário ou senha inválidos.\n\nVisitante: "visitante" (senha vazia ou "visitante").\nAdmin: admin / 1234');
+            alert('Usuário ou senha inválidos.\n\nVisitante: "visitante" (senha vazia ou "visitante").\nAdmin: hesoyam / yecgaa');
             return;
         }
 
