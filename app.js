@@ -11,7 +11,7 @@
     var SENHA_VISITANTE = '11980757087';
 
     /** Cole aqui o link do Google Maps do encontro (deixe vazio para ocultar o botão). */
-    var LINK_GOOGLE_MAPS_CONVITE = '';
+    var LINK_GOOGLE_MAPS_CONVITE = 'https://maps.app.goo.gl/pbqS7Q7KJpcFX8aR6?g_st=aw';
 
     var LS_VISITANTE_CONCLUIU = 'fujao_visitante_concluiu';
     var SS_SESSAO = 'fujao_sessao';
