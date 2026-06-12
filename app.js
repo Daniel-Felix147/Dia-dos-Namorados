@@ -179,6 +179,7 @@
 
     function tentarTocarVideo() {
         if (!videoFinal) return;
+        pararMusicaFundo();
         videoFinal.muted = true;
         videoFinal.play().catch(function () { /* autoplay bloqueado */ });
     }
